@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<validation:config name="Validation_Config" doc:name="Validation Config" doc:id="04d045b7-89c1-4484-b2f3-238515a54387" />
+	<flow name="mule4-batch-variablesFlow" doc:id="ab682786-d023-47a0-890f-3be233803aef" >
+		<http:listener config-ref="HTTP_Listener_config" path="/batch-variables" doc:name="Listener" doc:id="12b81734-cc44-478a-ba76-21fd694dc10e" />
+		<ee:transform doc:name="Transform Message" doc:id="72cc2e5e-5fa2-487a-8685-b23e1a4fdfe8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+(1 to 100000) map {
+	id: $,
+	"Name": "Name-" ++ $
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<flow-ref name="mule4-batch-variablesSub_Flow" />
+		<set-payload mimeType="text/plain" value="Done"/>
+		
+	</flow>
+	<sub-flow name="mule4-batch-variablesSub_Flow" doc:id="4506471a-7e5b-4931-9bf2-d787b9380159">
+	
+	<set-variable variableName="commonName" value="Superman" doc:name="Set Variable" doc:id="313d60ab-f4e3-4bb2-a20a-474af88b0bdb" />
+		<batch:job jobName="mule4-batch-variablesBatch_Job" doc:id="dbcd8083-f8a5-4fdd-9664-9ac748eaa6f0" maxFailedRecords="1" >
+			<batch:process-records >
+				<batch:step name="Batch_Step" doc:id="f3f29244-1a60-406e-9fd0-ffd1f033e77d" >
+					<set-variable variableName="recordId" value="#[payload.id]" doc:name="Set Variable" doc:id="c7d91519-556e-4c67-b812-fe83daf3feb9" />
+				</batch:step>
+				<batch:step name="Batch_Step1" doc:id="423e8d09-6168-4a4a-9d02-7c6d886ccdf6" >
+					<logger level="INFO" doc:name="Logger" doc:id="badc9ecd-145b-44a3-89b3-0b5064945e0e" message="#['Processing Step 1 for ' ++ vars.recordId ++ ' with payload ' ++ payload.Name ++ ' and common name as ' ++ vars.commonName]"/>
+					<validation:is-true config-ref="Validation_Config" doc:name="Is true" doc:id="43eeb1cd-81ad-4891-b7e2-6325cd89b086" expression="#[payload.id == vars.recordId]" message="Flow Variable id must match with payload id."/>
+					<validation:is-true config-ref="Validation_Config" doc:name="Is true" doc:id="a1a38583-685a-4925-a678-5842dd00949e" expression="#[vars.commonName == 'Superman']"/>
+				</batch:step>
+				<batch:step name="Batch_Step2" doc:id="f66d0ff6-740e-45e3-b2ff-3f0ebd14e2f4" >
+					
+					<logger level="INFO" doc:name="Copy_of_Logger" doc:id="badc9ecd-145b-44a3-89b3-0b5064945e0e" message="#['Processing Step 2 for ' ++ vars.recordId ++ ' with payload ' ++ payload.Name ++ ' and common name as ' ++ vars.commonName]" />
+					<validation:is-true config-ref="Validation_Config" doc:name="Is true" doc:id="63c608ee-5fd4-43a7-95a8-a7c4afe52eaa" expression="#[payload.id == vars.recordId]" message="Flow Variable id must match with payload id." />
+					<validation:is-true config-ref="Validation_Config" doc:name="Is true" doc:id="dbb89557-7269-494b-8384-d74762d1dd05" expression="#[vars.commonName == 'Superman']"/>
+				</batch:step>
+			</batch:process-records>
+			<batch:on-complete >
+				<logger level="INFO" doc:name="Logger" doc:id="9a32e870-be3e-4ba2-ae5f-19731919dd26" message="#['Done - ' ++ payload ++ ', Flow Vars - ' ++ vars]"/>
+			</batch:on-complete>
+		</batch:job>
+	</sub-flow>
+</mule>
