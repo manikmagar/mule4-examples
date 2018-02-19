@@ -1,0 +1,20 @@
+{
+  "configs": [
+    "say-hello-mule4-docker.xml"
+  ],
+  "secureProperties": [],
+  "redeploymentEnabled": true,
+  "name": "say-hello-mule4-docker",
+  "minMuleVersion": "4.1.0",
+  "requiredProduct": "MULE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedResources": []
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}
