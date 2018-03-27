@@ -1,4 +1,4 @@
-FROM javastreets/mule:latest-4
+FROM javastreets/mule:latest
 
 COPY ./target/say-hello-mule4-docker*.jar /opt/mule/apps/
 

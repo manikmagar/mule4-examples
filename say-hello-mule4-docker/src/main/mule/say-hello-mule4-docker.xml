@@ -9,6 +9,6 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	</http:listener-config>
 	<flow name="say-hello-mule4-dockerFlow" doc:id="fab55560-f415-48f6-8e30-c882ba1b0dcc" >
 		<http:listener doc:name="Listener" doc:id="3ab073c8-341c-4c85-b3a0-e75b38778384" config-ref="HTTP_Listener_config" path="hello"/>
-		<set-payload value="#['Hello from Mule ESB (Version: ' ++ mule.version ++ '). I am running inside docker image javastreets/mule:latest-4']" doc:name="Set Payload" doc:id="b6c04ee9-6b59-46ce-8b79-1a20b63851f8" mimeType="text/plain"/>
+		<set-payload value="#['Hello from Mule ESB (Version: ' ++ mule.version ++ '). I am running inside docker image javastreets/mule.']" doc:name="Set Payload" doc:id="b6c04ee9-6b59-46ce-8b79-1a20b63851f8" mimeType="text/plain"/>
 	</flow>
 </mule>
