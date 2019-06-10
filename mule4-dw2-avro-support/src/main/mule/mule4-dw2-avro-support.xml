@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="a864f8da-1db1-4851-8aec-6e272ec719ec" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="mule4-dw2-avro-supportFlow1" doc:id="f8f9e288-57ce-410e-beb9-1331d49dc7a3" >
+		<file:listener doc:name="On New or Updated File" doc:id="a15304ca-f0b1-43ae-ad4f-361758daa21f" directory="Documents/mule-avro/input" moveToDirectory="Documents/mule-avro/backup" autoDelete="true" outputMimeType="application/avro">
+			<scheduling-strategy >
+				<fixed-frequency />
+			</scheduling-strategy>
+			<file:matcher filenamePattern="*.avro"/>
+		</file:listener>
+		<ee:transform doc:name="Transform Message" doc:id="f8c1d80c-5228-41a5-9daa-10269886fc43" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.2
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<file:write doc:name="Write" doc:id="0f52556c-7c91-4020-aa88-976e023e8130" path="#['Documents/mule-avro/output/test.avro' ++ attributes.creationTime ++'.json']" />
+	</flow>
+	<flow name="mule4-dw2-avro-supportFlow" doc:id="ce2bcd1c-e300-4af9-b172-5eb07a561591" >
+		<http:listener doc:name="Listener" doc:id="73c91fe6-0e53-4d3f-b24e-e2285f6908e1" config-ref="HTTP_Listener_config" path="/write"/>
+		<ee:transform doc:name="Transform Message" doc:id="52f16007-f2e3-46bf-99c8-b6117eadc0ad" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.2
+output application/avro schemaUrl="employee.avro.json"
+---
+(0 to 100) map {
+	employeeId: $$,
+	firstname: "Manik" ++ $$,
+	lastname: "Magar",
+	address: "Test dummy address 123",
+	notes: "some more information"
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<file:write doc:name="Write" doc:id="200831a1-726d-44fe-bfd2-68f8e2324132" path="#['Documents/mule-avro/input/test' ++ now() as LocalDateTime ++ '.avro']"/>
+		<set-payload value="#['File Generated']" doc:name="Set Payload" doc:id="69ab33d0-86e7-4d10-8a23-78dd8724e902" mimeType="text/plain"/>
+	</flow>
+</mule>

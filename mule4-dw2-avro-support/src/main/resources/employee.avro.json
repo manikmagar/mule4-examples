@@ -1,0 +1,27 @@
+{
+	"namespace": "com.javastreets.avro",
+	"name": "com.javastreets.avro.Employee",
+	"type": "record",
+	"fields": [
+		{
+			"name": "employeeId",
+			"type": "int"
+		},
+		{
+			"name": "firstname",
+			"type": "string"
+		},
+		{
+			"name": "lastname",
+			"type": "string"
+		},
+		{
+			"name": "address",
+			"type": "string"
+		},
+		{
+			"name": "notes",
+			"type": "string"
+		}
+	]
+}
