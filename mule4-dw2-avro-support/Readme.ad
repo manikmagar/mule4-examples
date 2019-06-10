@@ -1,0 +1,6 @@
+= DataWeave 2.2 and Avro Format
+This is an example project for DataWeave 2.2 and Avro Format.For more details, see https://javastreets.com/blog/mule-dataweave-2-avro-format.html
+
+This requires Mule Runtime version 4.2.0 and beyond. 
+
+Once deployed, you can access http://localhost:8081/write for triggering demo flows.
