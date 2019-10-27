@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="MULE_LIB/org.mule.modules/mule-scripting-module/1.1.6"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.modules/mule-validation-module/1.4.0"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.modules/mule-module-file-extension-common/1.2.0"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.connectors/mule-file-connector/1.2.0"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.connectors/mule-http-connector/1.5.10"/>
+	<classpathentry kind="con" path="MULE_LIB/org.mule.modules/mule-scripting-module/1.1.6"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.connectors/mule-sockets-connector/1.1.5"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="src/main/mule"/>

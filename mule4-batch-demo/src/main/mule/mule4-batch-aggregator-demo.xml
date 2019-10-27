@@ -42,7 +42,7 @@ output application/java
 					<flow-ref doc:name="Flow Reference" doc:id="2373777a-82c5-4469-a5f5-7f7850410b14" name="batch-step-2-process-aggr"/>
 					<batch:aggregator doc:name="Batch Aggregator" doc:id="950c69f6-6399-4e3a-a641-5bd7d3cc3363" size="3">
 						<scripting:execute engine="groovy" doc:name="Execute" doc:id="8689469c-8358-428a-a72b-f3425aa516b4" >
-							<scripting:code >vars.records[0].payload.value.status = 'Test'</scripting:code>
+							<scripting:code >payload[0].status = 'Test'</scripting:code>
 						</scripting:execute>
 					</batch:aggregator>
 				</batch:step>
@@ -56,8 +56,58 @@ output application/java
 		</batch:job>
 		<logger doc:name="Logger" message="#['Done']" level="INFO"/>
 	</flow>
+	<flow name="mule4-batch-demoFlow-aggr-streaming" doc:id="b76502df-aa7b-4c1b-b7bb-bd55ef042d01" >
+		<http:listener path="/batch-start-aggr-streaming" doc:name="Listener" doc:id="cea8bbd4-7486-496e-8a13-09d2cd377b44" config-ref="HTTP_Listener_config"/>
+		<ee:transform doc:name="Transform Message" doc:id="abbba978-8f9a-4dd9-8304-9ea1d21eb117" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[
+	{
+		"id": 2,
+		"status": 'Ready',
+		"type": 'CoffeeOrder'
+	},{
+		"id": 3,
+		"status": 'Ready',
+		"type": 'ABCDERTREGDFG'
+	},{
+		"id": 4,
+		"status": 'Ready',
+		"type": 'ABCDERTREGDFG'
+	}
+	
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<batch:job jobName="mule4-batch-demoBatch-aggr-streaming_Job" doc:id="0481d791-0293-4927-bd65-2a602c17d34c" >
+			<batch:process-records >
+				<batch:step name="Batch_Step_1-aggr-streaming" doc:id="b80219ff-cfe5-48d8-afc8-41b05a469116" acceptPolicy="ALL">
+					<flow-ref name="batch-step-1-process-aggr" doc:name="batch-step-1-process-aggr"/>
+				</batch:step>
+				<batch:step name="Batch_Step_2-aggr-streaming" acceptExpression="#[payload.status == 'Processing']"  doc:id="42f62c5a-0f64-4240-aefe-0fe8103c1646">
+					<flow-ref doc:name="Flow Reference" doc:id="870c38a0-b873-4e54-aa24-20f085b15bed" name="batch-step-2-process-aggr"/>
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="efbfd171-0d1f-4207-adbf-e2dd81a33e3d" streaming="true">
+						<foreach doc:name="For Each" doc:id="dd27ba06-a315-461e-8d69-55e351c61484" >
+							<scripting:execute engine="groovy" doc:name="Execute" doc:id="cee222b5-34e2-4ed1-b367-407afa989e31" >
+								<scripting:code >payload.value.status = 'Test'</scripting:code>
+							</scripting:execute>
+						</foreach>
+					</batch:aggregator>
+				</batch:step>
+				<batch:step name="Batch_Step_3-aggr-streaming" doc:id="1c734d1b-49c2-4b21-b61b-84abd80834ac" acceptPolicy="ALL">
+					<flow-ref name="batch-step-3-process-aggr" doc:name="batch-step-3-process-aggr"/>
+				</batch:step>
+			</batch:process-records>
+			<batch:on-complete >
+				<logger level="INFO" doc:name="Logger" doc:id="9975f934-f8f8-496d-a0ab-608cc31348a7" />
+			</batch:on-complete>
+		</batch:job>
+		<logger doc:name="Logger" message="#['Done']" level="INFO"/>
+	</flow>
 	<sub-flow name="batch-step-1-process-aggr" doc:id="2f446753-f1f6-455a-8277-af1ebae2c42d">
-		<logger message="#['PRocessing Step 1 with id - ' ++ payload.id]" level="INFO" doc:name="Logger"/>
+		<logger message="#['Processing Step 1 with id - ' ++ payload.id]" level="INFO" doc:name="Logger"/>
 		<set-variable variableName="recordId" value="#[payload.id]" doc:name="Set Variable"/>
 		<ee:transform doc:name="Transform Message" doc:id="20d74358-8d0f-4399-9f55-5e766777b606" >
 			<ee:message >
