@@ -10,7 +10,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
 	<flow name="mule4-batch-demoFlow" doc:id="9d1c1666-14dd-48a9-96bd-d810625699e7" >
-		<http:listener config-ref="HTTP_Listener_config" path="/batch-start" doc:name="Listener" doc:id="d18d1a14-21a7-4767-8883-4f7d4be830c1" />
+		<http:listener path="/batch-start" doc:name="Listener" doc:id="d18d1a14-21a7-4767-8883-4f7d4be830c1" config-ref="HTTP_Listener_config"/>
 		<ee:transform doc:name="Transform Message" doc:id="6f71ff74-2992-436a-9fb5-f333252a1f8b" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0

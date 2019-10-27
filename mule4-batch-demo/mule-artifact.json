@@ -1,20 +1,3 @@
 {
-  "domain": "default",
-  "configs": [
-    "mule4-batch-demo.xml",
-    "mule4-batch-variables.xml"
-  ],
-  "redeploymentEnabled": true,
-  "name": "mule4-batch-demo",
-  "minMuleVersion": "4.0.0-rc",
-  "classLoaderModelLoaderDescriptor": {
-    "id": "mule",
-    "attributes": {
-      "exportedResources": []
-    }
-  },
-  "bundleDescriptorLoader": {
-    "id": "mule",
-    "attributes": {}
-  }
+  "minMuleVersion": "4.2.1"
 }
