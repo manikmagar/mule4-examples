@@ -1,6 +1,6 @@
 # Mule 4 Examples Repository
 
-This repository holds various examples for Mule ESB 4.
+This repository contains various examples for Mule ESB 4.
 
 * **mule4-batch-demo**: Implements batch processing in mule 4. https://javastreets.com/blog/2017/10/mule-4-batch-processing.html
 * **say-hello-mule4-docker**: A Simple Mule 4 Application running inside Mule 4 Docker Image. https://javastreets.com/blog/run-mule4-in-docker-container.html
