@@ -1,4 +1,4 @@
-# Mule 4 Examples repository
+# Mule 4 Examples Repository
 
 This repository holds various examples for Mule ESB 4.
 
